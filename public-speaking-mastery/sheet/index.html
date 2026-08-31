@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>PDF Download</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#f4f4f7;
+  font-family:Arial,sans-serif;
+}
+
+.download-box{
+  width:220px;
+  text-align:center;
+}
+
+.download-btn{
+  position:relative;
+  overflow:hidden;
+  width:100%;
+  height:56px;
+  border:0;
+  border-radius:14px;
+  background:#111;
+  color:#fff;
+  cursor:pointer;
+  font-size:16px;
+  font-weight:600;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  box-shadow:0 8px 25px rgba(0,0,0,.15);
+  transition:.25s ease;
+}
+
+.download-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 12px 30px rgba(0,0,0,.2);
+}
+
+.download-btn:active{
+  transform:scale(.96);
+}
+
+.icon{
+  width:21px;
+  height:21px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  transition:.3s;
+}
+
+.loading .icon{
+  animation:spin .8s linear infinite;
+}
+
+@keyframes spin{
+  to{transform:rotate(360deg)}
+}
+
+.btn-text{
+  transition:.2s;
+}
+
+.progress{
+  position:absolute;
+  left:0;
+  bottom:0;
+  width:0%;
+  height:4px;
+  background:#fff;
+  transition:width .15s linear;
+}
+
+.ripple{
+  position:absolute;
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:rgba(255,255,255,.35);
+  transform:scale(0);
+  animation:ripple .6s linear;
+  pointer-events:none;
+}
+
+@keyframes ripple{
+  to{
+    transform:scale(35);
+    opacity:0;
+  }
+}
+
+.success{
+  display:none;
+  margin-top:12px;
+  font-size:13px;
+  color:#333;
+}
+
+.success.show{
+  display:block;
+  animation:fade .4s ease;
+}
+
+@keyframes fade{
+  from{opacity:0;transform:translateY(5px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.check{
+  display:inline-block;
+  margin-right:5px;
+  font-weight:bold;
+}
+
+.download-btn.done{
+  background:#222;
+}
+
+@media(max-width:480px){
+  .download-box{
+    width:80%;
+    max-width:230px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="download-box">
+
+  <button class="download-btn" id="downloadBtn">
+
+    <svg class="icon" id="icon"
+         viewBox="0 0 24 24">
+      <path d="M12 3v12"/>
+      <path d="m7 10 5 5 5-5"/>
+      <path d="M5 21h14"/>
+    </svg>
+
+    <span class="btn-text" id="btnText">
+      Download PDF
+    </span>
+
+    <div class="progress" id="progress"></div>
+
+  </button>
+
+  <div class="success" id="success">
+    <span class="check">✓</span>
+    Download started successfully
+  </div>
+
+</div>
+
+<script>
+const button = document.getElementById("downloadBtn");
+const text = document.getElementById("btnText");
+const progress = document.getElementById("progress");
+const success = document.getElementById("success");
+const icon = document.getElementById("icon");
+
+let downloading = false;
+
+button.addEventListener("click", function(e){
+
+  if(downloading) return;
+
+  downloading = true;
+
+  /* Ripple effect */
+  const ripple = document.createElement("span");
+  ripple.className = "ripple";
+
+  const rect = button.getBoundingClientRect();
+
+  ripple.style.left =
+    (e.clientX - rect.left) + "px";
+
+  ripple.style.top =
+    (e.clientY - rect.top) + "px";
+
+  button.appendChild(ripple);
+
+  setTimeout(()=>{
+    ripple.remove();
+  },600);
+
+  /* Loading state */
+  button.classList.add("loading");
+  text.textContent = "Preparing...";
+
+  let percent = 0;
+
+  const timer = setInterval(()=>{
+
+    percent += Math.random() * 12;
+
+    if(percent >= 100){
+      percent = 100;
+      clearInterval(timer);
+
+      text.textContent = "Downloading...";
+      progress.style.width = "100%";
+
+      setTimeout(startDownload,350);
+    }
+
+    progress.style.width = percent + "%";
+
+  },100);
+
+});
+
+function startDownload(){
+
+  const link = document.createElement("a");
+
+  link.href = "sheet.pdf";
+  link.download = "sheet.pdf";
+
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+
+  /* Success state */
+  setTimeout(()=>{
+
+    button.classList.remove("loading");
+    button.classList.add("done");
+
+    text.textContent = "Downloaded ✓";
+
+    success.classList.add("show");
+
+    setTimeout(resetButton,2500);
+
+  },400);
+}
+
+function resetButton(){
+
+  button.classList.remove("done");
+  success.classList.remove("show");
+
+  progress.style.width = "0%";
+  text.textContent = "Download PDF";
+
+  downloading = false;
+}
+</script>
+
+</body>
+</html>
