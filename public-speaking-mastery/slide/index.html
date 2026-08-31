@@ -1,321 +1,613 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
 
-<!-- Open Graph -->
-<meta property="og:type" content="website">
-<meta property="og:title" content="Presentation">
-<meta property="og:description" content="Presentation slides">
-<meta property="og:image" content="b.png">
-<meta property="og:image:type" content="image/png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="675">
-
 <meta name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+      content="width=device-width,
+               initial-scale=1.0,
+               maximum-scale=1.0,
+               user-scalable=no">
 
 <title>Presentation</title>
 
+
+<!-- =========================
+     OPEN GRAPH
+     ========================= -->
+
+<meta property="og:type"
+      content="website">
+
+<meta property="og:title"
+      content="Presentation">
+
+<meta property="og:description"
+      content="Presentation slides">
+
+<meta property="og:image"
+      content="b.png">
+
+<meta property="og:image:type"
+      content="image/png">
+
+<meta property="og:image:width"
+      content="1200">
+
+<meta property="og:image:height"
+      content="675">
+
+
 <style>
-    * {
-        box-sizing: border-box;
-        -webkit-tap-highlight-color: transparent;
+
+/* =========================================================
+   GLOBAL
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+
+    width: 100%;
+    height: 100%;
+
+    margin: 0;
+    padding: 0;
+
+    overflow: hidden;
+
+    background: #000;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+}
+
+
+/* =========================================================
+   LOADER
+   ========================================================= */
+
+#loader {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 9999;
+
+    background: #000;
+
+    color: #fff;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    padding: 25px;
+}
+
+
+#loaderText {
+
+    font-size:
+        clamp(20px, 4vw, 34px);
+
+    margin-bottom: 22px;
+
+    font-weight: 500;
+}
+
+
+#progress {
+
+    width:
+        min(520px, 78vw);
+
+    height: 7px;
+
+    background: #292929;
+
+    border-radius: 20px;
+
+    overflow: hidden;
+}
+
+
+#progressBar {
+
+    width: 0%;
+
+    height: 100%;
+
+    background: #fff;
+
+    border-radius: inherit;
+
+    transition:
+        width .15s ease;
+}
+
+
+#progressText {
+
+    margin-top: 13px;
+
+    color: #999;
+
+    font-size: 14px;
+
+    max-width: 90vw;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+#errorBox {
+
+    display: none;
+
+    margin-top: 22px;
+
+    max-width: 600px;
+
+    color: #ffb3b3;
+
+    font-size: 14px;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   PRESENTATION
+   ========================================================= */
+
+#presentation {
+
+    position: fixed;
+
+    inset: 0;
+
+    background: #000;
+
+    display: none;
+
+    align-items: center;
+
+    justify-content: center;
+}
+
+
+#slideArea {
+
+    position: relative;
+
+    width: 100vw;
+
+    height: 100vh;
+
+    background: #000;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   SLIDES
+   ========================================================= */
+
+.slide {
+
+    position: absolute;
+
+    display: none;
+
+    max-width: 100vw;
+
+    max-height: 100vh;
+
+    width: auto;
+
+    height: auto;
+
+    object-fit: contain;
+
+    user-select: none;
+
+    -webkit-user-drag: none;
+
+    background: #000;
+}
+
+
+.slide.active {
+
+    display: block;
+}
+
+
+/*
+   PDF canvas
+
+   Keep the complete page visible.
+*/
+
+canvas.slide {
+
+    max-width: 100vw;
+
+    max-height: 100vh;
+
+    width: auto;
+
+    height: auto;
+
+    object-fit: contain;
+}
+
+
+/* =========================================================
+   NAVIGATION BUTTONS
+   ========================================================= */
+
+.navButton {
+
+    position: fixed;
+
+    bottom: 20px;
+
+    width: 55px;
+
+    height: 55px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255,255,255,.16);
+
+    color: #fff;
+
+    font-size: 32px;
+
+    line-height: 55px;
+
+    padding: 0;
+
+    cursor: pointer;
+
+    z-index: 100;
+
+    backdrop-filter:
+        blur(10px);
+
+    -webkit-backdrop-filter:
+        blur(10px);
+
+    opacity: .55;
+
+    transition:
+        opacity .2s ease,
+        background .2s ease,
+        transform .12s ease;
+}
+
+
+.navButton:hover {
+
+    opacity: 1;
+
+    background:
+        rgba(255,255,255,.28);
+}
+
+
+.navButton:active {
+
+    transform:
+        scale(.88);
+}
+
+
+#prev {
+
+    left: 20px;
+}
+
+
+#next {
+
+    right: 20px;
+}
+
+
+/* =========================================================
+   FULLSCREEN
+   ========================================================= */
+
+#fullscreen {
+
+    position: fixed;
+
+    top: 15px;
+
+    right: 15px;
+
+    width: 44px;
+
+    height: 44px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255,255,255,.15);
+
+    color: #fff;
+
+    font-size: 22px;
+
+    cursor: pointer;
+
+    z-index: 100;
+
+    opacity: .45;
+
+    transition:
+        opacity .2s ease,
+        transform .15s ease;
+}
+
+
+#fullscreen:hover {
+
+    opacity: 1;
+}
+
+
+#fullscreen:active {
+
+    transform: scale(.88);
+}
+
+
+/* =========================================================
+   COUNTER
+   ========================================================= */
+
+#counter {
+
+    position: fixed;
+
+    left: 50%;
+
+    bottom: 9px;
+
+    transform:
+        translateX(-50%);
+
+    color:
+        rgba(255,255,255,.55);
+
+    font-size: 12px;
+
+    z-index: 100;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   ROTATE WARNING
+   ========================================================= */
+
+#rotateWarning {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 10000;
+
+    background: #000;
+
+    color: #fff;
+
+    display: none;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    padding: 30px;
+}
+
+
+.rotateBox {
+
+    max-width: 500px;
+}
+
+
+#rotateIcon {
+
+    font-size: 70px;
+
+    margin-bottom: 20px;
+
+    animation:
+        rotateDevice 2s
+        ease-in-out
+        infinite;
+}
+
+
+@keyframes rotateDevice {
+
+    0% {
+        transform: rotate(0deg);
     }
 
-    html, body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        background: #000;
-        font-family: Arial, sans-serif;
+    50% {
+        transform: rotate(90deg);
     }
 
-    /* =========================
-       LOADING SCREEN
-       ========================= */
-
-    #loader {
-        position: fixed;
-        inset: 0;
-        z-index: 9999;
-        background: #000;
-        color: white;
-
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-
-        text-align: center;
+    100% {
+        transform: rotate(0deg);
     }
+}
 
-    #loaderText {
-        font-size: clamp(18px, 3vw, 32px);
-        margin-bottom: 20px;
-    }
 
-    #progress {
-        width: min(500px, 75vw);
-        height: 7px;
-        background: #333;
-        border-radius: 20px;
-        overflow: hidden;
-    }
+.rotateBox h2 {
 
-    #progressBar {
-        width: 0%;
-        height: 100%;
-        background: white;
-        transition: width .15s linear;
-    }
+    margin: 0 0 12px;
 
-    #progressText {
-        margin-top: 12px;
-        color: #aaa;
-        font-size: 14px;
-    }
+    font-size: 26px;
+}
 
-    /* =========================
-       PRESENTATION
-       ========================= */
+
+.rotateBox p {
+
+    margin: 0;
+
+    color: #999;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   PORTRAIT
+   ========================================================= */
+
+@media (orientation: portrait) {
 
     #presentation {
-        position: fixed;
-        inset: 0;
-        background: #000;
 
-        display: none;
-        align-items: center;
-        justify-content: center;
+        display: none !important;
     }
 
-    #slideArea {
-        position: relative;
-
-        width: 100vw;
-        height: 100vh;
+    #rotateWarning {
 
         display: flex;
-        align-items: center;
-        justify-content: center;
-
-        background: #000;
     }
+}
 
-    .slide {
-        position: absolute;
 
-        max-width: 100vw;
-        max-height: 100vh;
+/* =========================================================
+   LANDSCAPE
+   ========================================================= */
 
-        width: auto;
-        height: auto;
+@media (orientation: landscape) {
 
-        object-fit: contain;
+    #rotateWarning {
 
-        display: none;
-
-        user-select: none;
-        -webkit-user-drag: none;
+        display: none !important;
     }
+}
 
-    .slide.active {
-        display: block;
-    }
 
-    /* PDF canvases */
-    canvas.slide {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-    }
+/* =========================================================
+   SMALL SCREEN
+   ========================================================= */
 
-    /* =========================
-       CONTROLS
-       ========================= */
+@media (max-height: 500px) {
 
     .navButton {
-        position: fixed;
-        bottom: 20px;
 
-        width: 54px;
-        height: 54px;
+        width: 43px;
 
-        border: none;
-        border-radius: 50%;
+        height: 43px;
 
-        background: rgba(255,255,255,.18);
-        color: white;
+        line-height: 43px;
 
-        font-size: 30px;
-        line-height: 54px;
+        font-size: 24px;
 
-        cursor: pointer;
-
-        z-index: 100;
-
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-
-        opacity: .55;
-
-        transition:
-            opacity .2s,
-            background .2s,
-            transform .1s;
-    }
-
-    .navButton:hover {
-        opacity: 1;
-        background: rgba(255,255,255,.3);
-    }
-
-    .navButton:active {
-        transform: scale(.9);
+        bottom: 10px;
     }
 
     #prev {
-        left: 20px;
+
+        left: 10px;
     }
 
     #next {
-        right: 20px;
+
+        right: 10px;
     }
 
     #fullscreen {
-        position: fixed;
-        top: 15px;
-        right: 15px;
 
-        width: 42px;
-        height: 42px;
+        width: 38px;
 
-        border: none;
-        border-radius: 50%;
+        height: 38px;
 
-        background: rgba(255,255,255,.15);
-        color: white;
+        top: 9px;
 
-        font-size: 20px;
+        right: 9px;
 
-        cursor: pointer;
-        z-index: 100;
-
-        opacity: .45;
+        font-size: 18px;
     }
+}
 
-    #fullscreen:hover {
-        opacity: 1;
+
+/* =========================================================
+   VERY SMALL WIDTH
+   ========================================================= */
+
+@media (max-width: 450px) {
+
+    .navButton {
+
+        width: 48px;
+
+        height: 48px;
+
+        line-height: 48px;
+
+        font-size: 27px;
     }
+}
 
-    #counter {
-        position: fixed;
-        bottom: 8px;
-        left: 50%;
-        transform: translateX(-50%);
-
-        color: rgba(255,255,255,.6);
-
-        font-size: 12px;
-
-        z-index: 100;
-
-        pointer-events: none;
-    }
-
-    /* =========================
-       LANDSCAPE WARNING
-       ========================= */
-
-    #rotateWarning {
-        position: fixed;
-        inset: 0;
-
-        background: #000;
-        color: white;
-
-        z-index: 10000;
-
-        display: none;
-
-        align-items: center;
-        justify-content: center;
-
-        text-align: center;
-
-        padding: 30px;
-    }
-
-    #rotateWarning .box {
-        max-width: 500px;
-    }
-
-    #rotateIcon {
-        font-size: 70px;
-        margin-bottom: 20px;
-    }
-
-    #rotateWarning h2 {
-        margin: 0 0 10px;
-        font-size: 26px;
-    }
-
-    #rotateWarning p {
-        color: #aaa;
-        line-height: 1.5;
-    }
-
-    /*
-       Portrait = width <= height
-       We don't show the presentation in portrait.
-    */
-    @media (orientation: portrait) {
-        #presentation {
-            display: none !important;
-        }
-
-        #rotateWarning {
-            display: flex;
-        }
-    }
-
-    @media (orientation: landscape) {
-        #rotateWarning {
-            display: none !important;
-        }
-    }
-
-    /*
-       On very small screens, controls become smaller.
-    */
-    @media (max-height: 500px) {
-        .navButton {
-            width: 42px;
-            height: 42px;
-            line-height: 42px;
-            font-size: 23px;
-            bottom: 10px;
-        }
-
-        #prev {
-            left: 10px;
-        }
-
-        #next {
-            right: 10px;
-        }
-    }
 </style>
+
 </head>
+
 
 <body>
 
-<!-- =========================
+
+<!-- =======================================================
      LOADING SCREEN
-     ========================= -->
+     ======================================================= -->
 
 <div id="loader">
 
@@ -324,32 +616,41 @@
     </div>
 
     <div id="progress">
+
         <div id="progressBar"></div>
+
     </div>
 
     <div id="progressText">
-        Please wait. The presentation is being prepared.
+        Please wait…
     </div>
+
+    <div id="errorBox"></div>
 
 </div>
 
 
-<!-- =========================
+
+<!-- =======================================================
      ROTATE WARNING
-     ========================= -->
+     ======================================================= -->
 
 <div id="rotateWarning">
 
-    <div class="box">
+    <div class="rotateBox">
 
-        <div id="rotateIcon">⟳</div>
+        <div id="rotateIcon">
+            ⟳
+        </div>
 
-        <h2>Landscape mode required</h2>
+        <h2>
+            Landscape mode required
+        </h2>
 
         <p>
             Please rotate your device to landscape mode.
-            This presentation is designed for 16:9 screens,
-            laptops, PCs and smartboards.
+            This presentation is designed for landscape
+            screens.
         </p>
 
     </div>
@@ -357,211 +658,403 @@
 </div>
 
 
-<!-- =========================
+
+<!-- =======================================================
      PRESENTATION
-     ========================= -->
+     ======================================================= -->
 
 <div id="presentation">
 
+
     <div id="slideArea">
 
-        <!-- Slide 1 -->
+
+        <!--
+             COVER IMAGE
+
+             This is always the first slide.
+             It will NEVER be cropped.
+        -->
+
         <img
             id="firstSlide"
             class="slide"
-            src="b.png"
+            src="./b.png"
             alt="Presentation cover"
             draggable="false"
         >
 
-        <!-- PDF slides are inserted here -->
+
+        <!--
+             PDF canvases will be inserted here.
+        -->
+
 
     </div>
+
+
+
+    <!-- PREVIOUS -->
 
     <button
         id="prev"
         class="navButton"
         aria-label="Previous slide">
+
         ‹
+
     </button>
+
+
+
+    <!-- NEXT -->
 
     <button
         id="next"
         class="navButton"
         aria-label="Next slide">
+
         ›
+
     </button>
+
+
+
+    <!-- FULLSCREEN -->
 
     <button
         id="fullscreen"
         aria-label="Fullscreen">
+
         ⛶
+
     </button>
 
+
+
+    <!-- COUNTER -->
+
     <div id="counter"></div>
+
 
 </div>
 
 
-<!-- PDF.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs"
-        type="module"></script>
+
+<!-- =======================================================
+     PDF.JS
+     ======================================================= -->
+
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs"
+    type="module">
+</script>
+
 
 
 <script type="module">
 
-/* ============================================================
-   CONFIGURATION
-   ============================================================ */
 
-const PDF_URL = "https://github.com/istiack-29/materials/public-speaking-mastery/slide/slide.pdf";
+/* =========================================================
+   CONFIG
+   ========================================================= */
 
-const COVER_URL = "b.png";
 
-const DB_NAME = "PresentationCache";
+/*
+   IMPORTANT:
+
+   slide.pdf is in the SAME folder as index.html.
+
+   Therefore we use:
+
+       ./slide.pdf
+
+   NOT a GitHub webpage URL.
+*/
+
+const PDF_URL = "./slide.pdf";
+
+
+/*
+   Cover image.
+*/
+
+const COVER_URL = "./b.png";
+
+
+/*
+   IndexedDB settings.
+*/
+
+const DB_NAME =
+    "PresentationCache";
+
 const DB_VERSION = 1;
-const STORE_NAME = "files";
 
-const CACHE_KEY = "presentation_pdf_cached";
-const CACHE_VERSION = "presentation_v1";
+const STORE_NAME =
+    "files";
 
 
-/* ============================================================
+/*
+   Cache version.
+
+   Change this to v2, v3 etc.
+   whenever you replace the PDF and want
+   every user to download the new one.
+*/
+
+const CACHE_VERSION =
+    "presentation_v1";
+
+
+const CACHE_KEY =
+    "presentation_pdf_version";
+
+
+/* =========================================================
    ELEMENTS
-   ============================================================ */
+   ========================================================= */
 
-const loader = document.getElementById("loader");
-const loaderText = document.getElementById("loaderText");
-const progressBar = document.getElementById("progressBar");
-const progressText = document.getElementById("progressText");
+const loader =
+    document.getElementById("loader");
 
-const presentation = document.getElementById("presentation");
-const slideArea = document.getElementById("slideArea");
+const loaderText =
+    document.getElementById("loaderText");
 
-const firstSlide = document.getElementById("firstSlide");
+const progressBar =
+    document.getElementById("progressBar");
 
-const prevButton = document.getElementById("prev");
-const nextButton = document.getElementById("next");
-const fullscreenButton = document.getElementById("fullscreen");
-const counter = document.getElementById("counter");
+const progressText =
+    document.getElementById("progressText");
+
+const errorBox =
+    document.getElementById("errorBox");
+
+const presentation =
+    document.getElementById("presentation");
+
+const slideArea =
+    document.getElementById("slideArea");
+
+const firstSlide =
+    document.getElementById("firstSlide");
+
+const prevButton =
+    document.getElementById("prev");
+
+const nextButton =
+    document.getElementById("next");
+
+const fullscreenButton =
+    document.getElementById("fullscreen");
+
+const counter =
+    document.getElementById("counter");
 
 
-/* ============================================================
+/* =========================================================
    PDF.JS
-   ============================================================ */
+   ========================================================= */
 
 const pdfjsLib = await import(
     "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs"
 );
 
+
 pdfjsLib.GlobalWorkerOptions.workerSrc =
     "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs";
 
 
-/* ============================================================
+/* =========================================================
    INDEXED DB
-   ============================================================ */
+   ========================================================= */
 
 function openDB() {
 
-    return new Promise((resolve, reject) => {
+    return new Promise(
+        (resolve, reject) => {
 
-        const request = indexedDB.open(
-            DB_NAME,
-            DB_VERSION
-        );
-
-        request.onupgradeneeded = () => {
-
-            const db = request.result;
-
-            if (!db.objectStoreNames.contains(STORE_NAME)) {
-                db.createObjectStore(STORE_NAME);
-            }
-
-        };
-
-        request.onsuccess = () => {
-            resolve(request.result);
-        };
-
-        request.onerror = () => {
-            reject(request.error);
-        };
-
-    });
-
-}
+            const request =
+                indexedDB.open(
+                    DB_NAME,
+                    DB_VERSION
+                );
 
 
-async function savePDF(blob) {
+            request.onupgradeneeded =
+                () => {
 
-    const db = await openDB();
-
-    return new Promise((resolve, reject) => {
-
-        const transaction =
-            db.transaction(STORE_NAME, "readwrite");
-
-        const store =
-            transaction.objectStore(STORE_NAME);
-
-        store.put(blob, PDF_URL);
-
-        transaction.oncomplete = () => {
-            resolve();
-        };
-
-        transaction.onerror = () => {
-            reject(transaction.error);
-        };
-
-    });
-
-}
+                    const db =
+                        request.result;
 
 
-async function getCachedPDF() {
+                    if (
+                        !db.objectStoreNames
+                            .contains(STORE_NAME)
+                    ) {
 
-    const db = await openDB();
+                        db.createObjectStore(
+                            STORE_NAME
+                        );
 
-    return new Promise((resolve, reject) => {
+                    }
 
-        const transaction =
-            db.transaction(STORE_NAME, "readonly");
-
-        const store =
-            transaction.objectStore(STORE_NAME);
-
-        const request =
-            store.get(PDF_URL);
-
-        request.onsuccess = () => {
-            resolve(request.result || null);
-        };
-
-        request.onerror = () => {
-            reject(request.error);
-        };
-
-    });
-
-}
+                };
 
 
-/* ============================================================
-   LOCAL STORAGE
-   ============================================================ */
+            request.onsuccess =
+                () => {
 
-function isCached() {
+                    resolve(
+                        request.result
+                    );
 
-    return (
-        localStorage.getItem(CACHE_KEY)
-        === CACHE_VERSION
+                };
+
+
+            request.onerror =
+                () => {
+
+                    reject(
+                        request.error
+                    );
+
+                };
+
+        }
     );
 
 }
 
+
+/* =========================================================
+   SAVE PDF
+   ========================================================= */
+
+async function savePDF(blob) {
+
+    const db =
+        await openDB();
+
+
+    return new Promise(
+        (resolve, reject) => {
+
+            const transaction =
+                db.transaction(
+                    STORE_NAME,
+                    "readwrite"
+                );
+
+
+            const store =
+                transaction.objectStore(
+                    STORE_NAME
+                );
+
+
+            store.put(
+                blob,
+                PDF_URL
+            );
+
+
+            transaction.oncomplete =
+                () => {
+
+                    resolve();
+
+                };
+
+
+            transaction.onerror =
+                () => {
+
+                    reject(
+                        transaction.error
+                    );
+
+                };
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   GET CACHED PDF
+   ========================================================= */
+
+async function getCachedPDF() {
+
+    const db =
+        await openDB();
+
+
+    return new Promise(
+        (resolve, reject) => {
+
+            const transaction =
+                db.transaction(
+                    STORE_NAME,
+                    "readonly"
+                );
+
+
+            const store =
+                transaction.objectStore(
+                    STORE_NAME
+                );
+
+
+            const request =
+                store.get(PDF_URL);
+
+
+            request.onsuccess =
+                () => {
+
+                    resolve(
+                        request.result || null
+                    );
+
+                };
+
+
+            request.onerror =
+                () => {
+
+                    reject(
+                        request.error
+                    );
+
+                };
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   CACHE CHECK
+   ========================================================= */
+
+function isCached() {
+
+    return (
+        localStorage.getItem(
+            CACHE_KEY
+        ) === CACHE_VERSION
+    );
+
+}
+
+
+/* =========================================================
+   MARK CACHE
+   ========================================================= */
 
 function markCached() {
 
@@ -573,49 +1066,95 @@ function markCached() {
 }
 
 
-/* ============================================================
+/* =========================================================
    DOWNLOAD PDF
-   ============================================================ */
+   ========================================================= */
 
 async function downloadPDF() {
+
 
     loaderText.textContent =
         "Downloading presentation…";
 
-    progressText.textContent =
-        "Loading the complete PDF before starting.";
 
-    const response = await fetch(PDF_URL, {
-        cache: "no-store"
-    });
+    progressText.textContent =
+        "Downloading the complete PDF…";
+
+
+    progressBar.style.width =
+        "0%";
+
+
+    /*
+       Fetch the LOCAL PDF.
+    */
+
+    const response =
+        await fetch(
+            PDF_URL,
+            {
+                cache: "no-store"
+            }
+        );
+
 
     if (!response.ok) {
+
         throw new Error(
-            "Could not load slide.pdf"
+            "slide.pdf could not be loaded. HTTP status: "
+            + response.status
         );
+
     }
 
+
+    /*
+       Check Content-Length.
+    */
+
     const total =
-        Number(response.headers.get("Content-Length")) || 0;
+        Number(
+            response.headers.get(
+                "Content-Length"
+            )
+        ) || 0;
+
+
+    /*
+       Some servers don't provide
+       a readable response body.
+    */
 
     if (!response.body) {
 
         const blob =
             await response.blob();
 
+
         await savePDF(blob);
 
         markCached();
 
+        progressBar.style.width =
+            "100%";
+
         return blob;
     }
+
+
+    /*
+       Stream the PDF.
+    */
 
     const reader =
         response.body.getReader();
 
+
     const chunks = [];
 
+
     let received = 0;
+
 
     while (true) {
 
@@ -624,54 +1163,106 @@ async function downloadPDF() {
             value
         } = await reader.read();
 
-        if (done) break;
+
+        if (done) {
+
+            break;
+
+        }
+
 
         chunks.push(value);
 
-        received += value.length;
+
+        received +=
+            value.length;
+
+
+        /*
+           Show real progress
+           when Content-Length exists.
+        */
 
         if (total > 0) {
 
             const percent =
                 Math.round(
-                    received / total * 100
+                    (received / total) * 100
                 );
+
 
             progressBar.style.width =
                 percent + "%";
 
+
             progressText.textContent =
-                `${percent}% loaded`;
+                percent + "% downloaded";
+
+        } else {
+
+            /*
+               Unknown total size.
+            */
+
+            progressText.textContent =
+                "Downloading… "
+                + Math.round(
+                    received / 1024
+                )
+                + " KB";
+
         }
 
     }
 
-    const blob =
-        new Blob(chunks, {
-            type: "application/pdf"
-        });
 
-    progressBar.style.width = "100%";
+    /*
+       Create final PDF Blob.
+    */
+
+    const blob =
+        new Blob(
+            chunks,
+            {
+                type: "application/pdf"
+            }
+        );
+
+
+    progressBar.style.width =
+        "100%";
+
 
     progressText.textContent =
-        "Download complete. Preparing slides…";
+        "Download complete.";
+
+
+    /*
+       Save permanently.
+    */
 
     await savePDF(blob);
 
+
     markCached();
 
+
     return blob;
+
 }
 
 
-/* ============================================================
+/* =========================================================
    GET PDF
-   ============================================================ */
+   ========================================================= */
 
-async function loadPDFFile() {
+async function getPDF() {
+
 
     /*
-       First check our persistent cache.
+       FIRST:
+
+       Check IndexedDB.
     */
 
     if (isCached()) {
@@ -679,66 +1270,105 @@ async function loadPDFFile() {
         loaderText.textContent =
             "Loading saved presentation…";
 
+
         progressText.textContent =
-            "Using the previously downloaded PDF.";
+            "Using the saved PDF…";
+
 
         const cached =
             await getCachedPDF();
+
 
         if (cached) {
 
             progressBar.style.width =
                 "100%";
 
+
             return cached;
+
         }
 
     }
 
+
     /*
-       No usable cache → download everything.
+       No valid cache.
+
+       Download it completely.
     */
 
     return await downloadPDF();
+
 }
 
 
-/* ============================================================
-   RENDER ALL PDF PAGES
-   ============================================================ */
+/* =========================================================
+   SLIDES ARRAY
+   ========================================================= */
 
 const slides = [];
 
-async function preparePresentation(pdfBlob) {
+
+/* =========================================================
+   PREPARE PRESENTATION
+   ========================================================= */
+
+async function preparePresentation(
+    pdfBlob
+) {
+
 
     loaderText.textContent =
-        "Preparing slides…";
+        "Preparing presentation…";
+
 
     progressText.textContent =
-        "The complete PDF is loaded. Rendering slides…";
+        "Opening PDF…";
+
+
+    /*
+       Convert Blob to ArrayBuffer.
+
+       PDF.js will work entirely from
+       this local memory copy.
+    */
 
     const arrayBuffer =
         await pdfBlob.arrayBuffer();
 
+
     /*
-       PDF.js gets the complete PDF from memory.
-       No network request is needed while presenting.
+       IMPORTANT:
+
+       data: arrayBuffer
+
+       means PDF.js does NOT need to
+       fetch the PDF again.
     */
 
     const pdf =
-        await pdfjsLib.getDocument({
-            data: arrayBuffer
-        }).promise;
+        await pdfjsLib
+            .getDocument({
+                data: arrayBuffer
+            })
+            .promise;
+
 
     /*
        First slide is b.png.
     */
 
-    slides.push(firstSlide);
+    slides.push(
+        firstSlide
+    );
+
 
     /*
-       Create ALL PDF canvases before showing
-       the presentation.
+       Render EVERY PDF page.
+
+       Nothing is shown until
+       this entire loop finishes.
     */
 
     for (
@@ -747,17 +1377,42 @@ async function preparePresentation(pdfBlob) {
         pageNumber++
     ) {
 
-        progressText.textContent =
-            `Preparing slide ${pageNumber} of ${pdf.numPages}…`;
 
-        const page =
-            await pdf.getPage(pageNumber);
+        progressText.textContent =
+            "Preparing slide "
+            + pageNumber
+            + " of "
+            + pdf.numPages
+            + "…";
+
 
         /*
-           Render at a good resolution.
+           Progress of rendering.
+        */
 
-           16:9 presentations generally look good
-           at 1.5–2x CSS resolution.
+        const renderPercent =
+            Math.round(
+                (pageNumber /
+                 pdf.numPages) * 100
+            );
+
+
+        progressBar.style.width =
+            renderPercent + "%";
+
+
+        /*
+           Get PDF page.
+        */
+
+        const page =
+            await pdf.getPage(
+                pageNumber
+            );
+
+
+        /*
+           Original viewport.
         */
 
         const baseViewport =
@@ -765,143 +1420,287 @@ async function preparePresentation(pdfBlob) {
                 scale: 1
             });
 
+
+        /*
+           Render resolution.
+
+           1280 minimum gives decent quality
+           on mobile and desktop.
+        */
+
         const targetWidth =
             Math.max(
                 window.innerWidth,
                 1280
             );
 
+
         const scale =
             targetWidth /
             baseViewport.width;
 
+
         const viewport =
             page.getViewport({
-                scale
+                scale: scale
             });
 
-        const canvas =
-            document.createElement("canvas");
 
-        canvas.className = "slide";
+        /*
+           Canvas.
+        */
+
+        const canvas =
+            document.createElement(
+                "canvas"
+            );
+
+
+        canvas.className =
+            "slide";
+
 
         canvas.width =
-            Math.ceil(viewport.width);
+            Math.ceil(
+                viewport.width
+            );
+
 
         canvas.height =
-            Math.ceil(viewport.height);
+            Math.ceil(
+                viewport.height
+            );
+
 
         canvas.style.maxWidth =
             "100vw";
 
+
         canvas.style.maxHeight =
             "100vh";
+
 
         canvas.style.width =
             "auto";
 
+
         canvas.style.height =
             "auto";
 
-        slideArea.appendChild(canvas);
+
+        /*
+           Add canvas to page.
+        */
+
+        slideArea.appendChild(
+            canvas
+        );
+
+
+        /*
+           Canvas rendering context.
+        */
 
         const context =
-            canvas.getContext("2d", {
-                alpha: false
-            });
+            canvas.getContext(
+                "2d",
+                {
+                    alpha: false
+                }
+            );
+
+
+        /*
+           Render.
+        */
 
         await page.render({
-            canvasContext: context,
-            viewport: viewport
+
+            canvasContext:
+                context,
+
+            viewport:
+                viewport
+
         }).promise;
 
-        slides.push(canvas);
+
+        /*
+           Store slide.
+        */
+
+        slides.push(
+            canvas
+        );
+
     }
 
+
     /*
-       EVERYTHING is now prepared.
-       Only now can the presentation start.
+       Everything is ready.
     */
 
-    progressBar.style.width = "100%";
+    progressBar.style.width =
+        "100%";
+
 
     progressText.textContent =
-        `${slides.length} slides ready.`;
+        slides.length
+        + " slides ready.";
+
+
+    /*
+       Tiny delay so the user can
+       actually see the completed state.
+    */
 
     await new Promise(
-        resolve => setTimeout(resolve, 300)
+        resolve =>
+            setTimeout(
+                resolve,
+                350
+            )
     );
+
 }
 
 
-/* ============================================================
-   SLIDE NAVIGATION
-   ============================================================ */
+/* =========================================================
+   CURRENT SLIDE
+   ========================================================= */
 
 let currentSlide = 0;
 
 
+/* =========================================================
+   SHOW SLIDE
+   ========================================================= */
+
 function showSlide(index) {
 
+
     if (index < 0) {
+
         index = 0;
+
     }
 
-    if (index >= slides.length) {
-        index = slides.length - 1;
+
+    if (
+        index >= slides.length
+    ) {
+
+        index =
+            slides.length - 1;
+
     }
 
-    slides.forEach(
-        slide => slide.classList.remove("active")
-    );
-
-    slides[index].classList.add("active");
-
-    currentSlide = index;
-
-    counter.textContent =
-        `${currentSlide + 1} / ${slides.length}`;
 
     /*
-       Disable buttons at beginning/end.
+       Hide every slide.
+    */
+
+    slides.forEach(
+        slide => {
+
+            slide.classList.remove(
+                "active"
+            );
+
+        }
+    );
+
+
+    /*
+       Show requested slide.
+    */
+
+    slides[index].classList.add(
+        "active"
+    );
+
+
+    currentSlide =
+        index;
+
+
+    /*
+       Counter.
+    */
+
+    counter.textContent =
+        (currentSlide + 1)
+        + " / "
+        + slides.length;
+
+
+    /*
+       Button opacity.
     */
 
     prevButton.style.opacity =
-        currentSlide === 0 ? ".15" : ".55";
+        currentSlide === 0
+            ? ".12"
+            : ".55";
+
 
     nextButton.style.opacity =
-        currentSlide === slides.length - 1
-            ? ".15"
+        currentSlide ===
+        slides.length - 1
+            ? ".12"
             : ".55";
+
 }
 
+
+/* =========================================================
+   NEXT
+   ========================================================= */
 
 function nextSlide() {
 
-    if (currentSlide < slides.length - 1) {
-        showSlide(currentSlide + 1);
+    if (
+        currentSlide <
+        slides.length - 1
+    ) {
+
+        showSlide(
+            currentSlide + 1
+        );
+
     }
 
 }
 
+
+/* =========================================================
+   PREVIOUS
+   ========================================================= */
 
 function previousSlide() {
 
-    if (currentSlide > 0) {
-        showSlide(currentSlide - 1);
+    if (
+        currentSlide > 0
+    ) {
+
+        showSlide(
+            currentSlide - 1
+        );
+
     }
 
 }
 
 
-/* ============================================================
-   BUTTONS
-   ============================================================ */
+/* =========================================================
+   BUTTON EVENTS
+   ========================================================= */
 
 nextButton.addEventListener(
     "click",
     nextSlide
 );
+
 
 prevButton.addEventListener(
     "click",
@@ -909,13 +1708,14 @@ prevButton.addEventListener(
 );
 
 
-/* ============================================================
+/* =========================================================
    KEYBOARD
-   ============================================================ */
+   ========================================================= */
 
 document.addEventListener(
     "keydown",
     event => {
+
 
         if (
             event.key === "ArrowRight" ||
@@ -924,9 +1724,11 @@ document.addEventListener(
         ) {
 
             event.preventDefault();
+
             nextSlide();
 
         }
+
 
         else if (
             event.key === "ArrowLeft" ||
@@ -934,9 +1736,11 @@ document.addEventListener(
         ) {
 
             event.preventDefault();
+
             previousSlide();
 
         }
+
 
         else if (
             event.key === "Home"
@@ -946,13 +1750,17 @@ document.addEventListener(
 
         }
 
+
         else if (
             event.key === "End"
         ) {
 
-            showSlide(slides.length - 1);
+            showSlide(
+                slides.length - 1
+            );
 
         }
+
 
         else if (
             event.key === "f" ||
@@ -967,25 +1775,35 @@ document.addEventListener(
 );
 
 
-/* ============================================================
+/* =========================================================
    FULLSCREEN
-   ============================================================ */
+   ========================================================= */
 
 async function enterFullscreen() {
 
     try {
 
-        if (!document.fullscreenElement) {
 
-            await document.documentElement.requestFullscreen();
+        if (
+            !document.fullscreenElement
+        ) {
 
-        } else {
+            await document.documentElement
+                .requestFullscreen();
+
+        }
+
+
+        else {
 
             await document.exitFullscreen();
 
         }
 
-    } catch (error) {
+
+    }
+
+    catch (error) {
 
         console.log(
             "Fullscreen unavailable:",
@@ -1003,28 +1821,35 @@ fullscreenButton.addEventListener(
 );
 
 
-/* ============================================================
-   TOUCH / SWIPE
-   ============================================================ */
+/* =========================================================
+   TOUCH SWIPE
+   ========================================================= */
 
 let touchStartX = 0;
+
 let touchStartY = 0;
+
 
 slideArea.addEventListener(
     "touchstart",
     event => {
 
+
         const touch =
             event.changedTouches[0];
 
+
         touchStartX =
             touch.screenX;
+
 
         touchStartY =
             touch.screenY;
 
     },
-    { passive: true }
+    {
+        passive: true
+    }
 );
 
 
@@ -1032,96 +1857,188 @@ slideArea.addEventListener(
     "touchend",
     event => {
 
+
         const touch =
             event.changedTouches[0];
 
+
         const deltaX =
-            touch.screenX - touchStartX;
+            touch.screenX -
+            touchStartX;
+
 
         const deltaY =
-            touch.screenY - touchStartY;
+            touch.screenY -
+            touchStartY;
+
 
         /*
-           Ignore vertical swipes.
+           Ignore small movements.
         */
 
         if (
-            Math.abs(deltaX) < 50 ||
-            Math.abs(deltaX) < Math.abs(deltaY)
+            Math.abs(deltaX) < 50
         ) {
+
             return;
+
         }
 
+
+        /*
+           Ignore mostly vertical swipes.
+        */
+
+        if (
+            Math.abs(deltaX) <
+            Math.abs(deltaY)
+        ) {
+
+            return;
+
+        }
+
+
         if (deltaX < 0) {
+
             nextSlide();
-        } else {
+
+        }
+
+        else {
+
             previousSlide();
+
         }
 
     },
-    { passive: true }
+    {
+        passive: true
+    }
 );
 
 
-/* ============================================================
-   START PRESENTATION
-   ============================================================ */
+/* =========================================================
+   START
+   ========================================================= */
 
 async function start() {
 
     try {
 
+
         /*
-           1. Load the COMPLETE PDF.
-           2. Cache it.
-           3. Render EVERY page.
-           4. Only THEN show presentation.
-        */
+         * STEP 1
+         *
+         * Get PDF from IndexedDB,
+         * or download it completely.
+         */
 
         const pdfBlob =
-            await loadPDFFile();
+            await getPDF();
+
+
+        /*
+         * STEP 2
+         *
+         * Render every page.
+         */
 
         await preparePresentation(
             pdfBlob
         );
 
-        /*
-           Make presentation visible only after
-           everything is ready.
-        */
 
-        loader.style.display = "none";
+        /*
+         * STEP 3
+         *
+         * Everything is ready.
+         *
+         * Only NOW hide loader.
+         */
+
+        loader.style.display =
+            "none";
+
 
         presentation.style.display =
             "flex";
 
+
         /*
-           Slide 1 = b.png
-        */
+         * STEP 4
+         *
+         * Show b.png.
+         */
 
         showSlide(0);
 
-    } catch (error) {
 
-        console.error(error);
+    }
+
+    catch (error) {
+
+
+        console.error(
+            "Presentation error:",
+            error
+        );
+
+
+        /*
+           Keep presentation hidden.
+        */
+
+        presentation.style.display =
+            "none";
+
+
+        /*
+           Show useful error.
+        */
 
         loaderText.textContent =
             "Unable to load presentation";
 
-        progressText.textContent =
-            error.message ||
-            "Please check that slide.pdf and b.png exist.";
 
         progressBar.style.width =
             "0%";
+
+
+        progressText.textContent =
+            "Something went wrong while loading the PDF.";
+
+
+        errorBox.style.display =
+            "block";
+
+
+        /*
+           Helpful debugging message.
+        */
+
+        errorBox.innerHTML =
+            "File expected at: <b>./slide.pdf</b><br><br>"
+            +
+            "Make sure <b>slide.pdf</b> is inside the same "
+            +
+            "folder as this index.html file.<br><br>"
+            +
+            "Error: "
+            +
+            String(
+                error.message ||
+                error
+            );
+
     }
 
 }
 
 
-/* ============================================================
-   START
-   ============================================================ */
+/* =========================================================
+   RUN
+   ========================================================= */
 
 start();
 
