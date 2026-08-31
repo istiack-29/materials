@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width,initial-scale=1.0">
+
+<title>Presentation Hub</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+  width:100%;
+  height:100%;
+  margin:0;
+}
+
+body{
+  overflow:hidden;
+  background:#08090c;
+  color:#fff;
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+/* MAIN */
+
+.container{
+  position:relative;
+  width:100%;
+  height:100vh;
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+
+  padding:20px;
+}
+
+/* SUBTLE BACKGROUND */
+
+.container::before{
+  content:"";
+  position:absolute;
+  width:60vw;
+  height:60vw;
+  max-width:600px;
+  max-height:600px;
+
+  left:50%;
+  top:32%;
+
+  transform:translate(-50%,-50%);
+
+  background:radial-gradient(
+    circle,
+    rgba(255,255,255,.07),
+    transparent 65%
+  );
+
+  pointer-events:none;
+}
+
+/* IMAGE */
+
+.logo-area{
+  position:absolute;
+
+  top:4%;
+  left:4%;
+  right:4%;
+
+  height:60%;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  z-index:1;
+}
+
+.logo{
+  display:block;
+
+  max-width:100%;
+  max-height:100%;
+
+  width:auto;
+  height:auto;
+
+  object-fit:contain;
+
+  user-select:none;
+  -webkit-user-drag:none;
+
+  filter:drop-shadow(
+    0 15px 35px rgba(0,0,0,.35)
+  );
+
+  animation:
+    imageIn .8s cubic-bezier(.2,.8,.2,1);
+}
+
+@keyframes imageIn{
+  from{
+    opacity:0;
+    transform:scale(.94);
+  }
+
+  to{
+    opacity:1;
+    transform:scale(1);
+  }
+}
+
+/* BUTTON AREA */
+
+.buttons{
+  position:absolute;
+
+  top:75%;
+  left:50%;
+
+  transform:translate(-50%,-50%);
+
+  width:min(560px,88%);
+
+  display:grid;
+  grid-template-columns:1fr 1fr;
+
+  gap:16px;
+
+  z-index:5;
+
+  animation:
+    buttonsIn .8s .15s both
+    cubic-bezier(.2,.8,.2,1);
+}
+
+@keyframes buttonsIn{
+  from{
+    opacity:0;
+    transform:
+      translate(-50%,-35%)
+      scale(.94);
+  }
+
+  to{
+    opacity:1;
+    transform:
+      translate(-50%,-50%)
+      scale(1);
+  }
+}
+
+/* BUTTON */
+
+.nav-btn{
+  position:relative;
+  overflow:hidden;
+
+  height:62px;
+
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.10),
+      rgba(255,255,255,.035)
+    );
+
+  color:#fff;
+
+  text-decoration:none;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+
+  font-size:16px;
+  font-weight:600;
+
+  backdrop-filter:blur(15px);
+  -webkit-backdrop-filter:blur(15px);
+
+  box-shadow:
+    0 12px 35px rgba(0,0,0,.35),
+    inset 0 1px rgba(255,255,255,.08);
+
+  transition:
+    transform .22s ease,
+    box-shadow .22s ease,
+    border-color .22s ease,
+    background .22s ease;
+}
+
+/* HOVER */
+
+.nav-btn:hover{
+  transform:translateY(-5px) scale(1.015);
+
+  border-color:
+    rgba(255,255,255,.24);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.16),
+      rgba(255,255,255,.055)
+    );
+
+  box-shadow:
+    0 18px 45px rgba(0,0,0,.45),
+    0 0 25px rgba(255,255,255,.05),
+    inset 0 1px rgba(255,255,255,.12);
+}
+
+/* PRESS */
+
+.nav-btn:active{
+  transform:
+    translateY(1px)
+    scale(.95);
+
+  box-shadow:
+    0 5px 15px rgba(0,0,0,.4);
+}
+
+/* ICON */
+
+.icon{
+  width:23px;
+  height:23px;
+
+  fill:none;
+
+  stroke:currentColor;
+  stroke-width:1.8;
+
+  stroke-linecap:round;
+  stroke-linejoin:round;
+
+  transition:
+    transform .3s ease;
+}
+
+.nav-btn:hover .icon{
+  transform:
+    scale(1.13)
+    rotate(-3deg);
+}
+
+/* ARROW */
+
+.arrow{
+  position:absolute;
+
+  right:17px;
+
+  opacity:.35;
+
+  transition:
+    opacity .25s ease,
+    transform .25s ease;
+}
+
+.nav-btn:hover .arrow{
+  opacity:1;
+  transform:translateX(4px);
+}
+
+/* RIPPLE */
+
+.ripple{
+  position:absolute;
+
+  width:8px;
+  height:8px;
+
+  border-radius:50%;
+
+  background:
+    rgba(255,255,255,.28);
+
+  transform:scale(0);
+
+  pointer-events:none;
+
+  animation:ripple .65s ease-out;
+}
+
+@keyframes ripple{
+  to{
+    transform:scale(55);
+    opacity:0;
+  }
+}
+
+/* SHINE */
+
+.nav-btn::after{
+  content:"";
+
+  position:absolute;
+
+  top:0;
+  left:-120%;
+
+  width:70%;
+  height:100%;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,.12),
+      transparent
+    );
+
+  transform:skewX(-20deg);
+
+  transition:left .6s ease;
+}
+
+.nav-btn:hover::after{
+  left:140%;
+}
+
+/* MOBILE */
+
+@media(max-width:600px){
+
+  .container{
+    padding:15px;
+  }
+
+  .logo-area{
+    top:5%;
+    left:5%;
+    right:5%;
+    height:61%;
+  }
+
+  .buttons{
+    top:75%;
+    width:90%;
+    gap:10px;
+  }
+
+  .nav-btn{
+    height:56px;
+    border-radius:15px;
+    font-size:14px;
+  }
+
+  .icon{
+    width:20px;
+    height:20px;
+  }
+
+  .arrow{
+    display:none;
+  }
+}
+
+/* SMALL HEIGHT SCREEN */
+
+@media(max-height:520px){
+
+  .logo-area{
+    top:3%;
+    height:57%;
+  }
+
+  .buttons{
+    top:76%;
+  }
+
+  .nav-btn{
+    height:50px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- FULL IMAGE -->
+
+  <div class="logo-area">
+    <img
+      class="logo"
+      src="./slide/b.png"
+      alt="Presentation"
+      draggable="false"
+    >
+  </div>
+
+
+  <!-- NAVIGATION -->
+
+  <div class="buttons">
+
+    <!-- SLIDES -->
+
+    <a
+      class="nav-btn"
+      href="./slide/"
+      data-ripple
+    >
+
+      <svg
+        class="icon"
+        viewBox="0 0 24 24"
+      >
+        <rect
+          x="3"
+          y="4"
+          width="18"
+          height="14"
+          rx="2"
+        />
+
+        <path d="M8 21h8"/>
+        <path d="M12 18v3"/>
+      </svg>
+
+      <span>Slides</span>
+
+      <span class="arrow">›</span>
+
+    </a>
+
+
+    <!-- SHEET -->
+
+    <a
+      class="nav-btn"
+      href="./sheet/"
+      data-ripple
+    >
+
+      <svg
+        class="icon"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M6 3h9l3 3v15H6z"
+        />
+
+        <path d="M14 3v4h4"/>
+        <path d="M9 11h6"/>
+        <path d="M9 15h6"/>
+        <path d="M9 19h4"/>
+      </svg>
+
+      <span>Sheet</span>
+
+      <span class="arrow">›</span>
+
+    </a>
+
+  </div>
+
+</div>
+
+
+<script>
+
+/* RIPPLE INTERACTION */
+
+document
+  .querySelectorAll("[data-ripple]")
+  .forEach(button => {
+
+    button.addEventListener("click",function(e){
+
+      const ripple =
+        document.createElement("span");
+
+      ripple.className="ripple";
+
+      const rect =
+        this.getBoundingClientRect();
+
+      ripple.style.left =
+        (e.clientX-rect.left)+"px";
+
+      ripple.style.top =
+        (e.clientY-rect.top)+"px";
+
+      this.appendChild(ripple);
+
+      setTimeout(()=>{
+        ripple.remove();
+      },650);
+
+    });
+
+  });
+
+
+/* TOUCH FEEDBACK */
+
+document
+  .querySelectorAll(".nav-btn")
+  .forEach(button=>{
+
+    button.addEventListener(
+      "touchstart",
+      ()=>{
+        button.style.transform="scale(.96)";
+      },
+      {passive:true}
+    );
+
+    button.addEventListener(
+      "touchend",
+      ()=>{
+        button.style.transform="";
+      },
+      {passive:true}
+    );
+
+  });
+
+</script>
+
+</body>
+</html>
