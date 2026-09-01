@@ -64,7 +64,7 @@ body{
   pointer-events:none;
 }
 
-/* IMAGE */
+/* VIDEO AREA */
 
 .logo-area{
   position:absolute;
@@ -82,23 +82,18 @@ body{
   z-index:1;
 }
 
-.logo{
-  display:block;
-
-  max-width:100%;
+.video-frame{
+  width:100%;
+  max-width:800px;
+  height:100%;
   max-height:100%;
+  aspect-ratio:16/9;
 
-  width:auto;
-  height:auto;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:20px;
 
-  object-fit:contain;
-
-  user-select:none;
-  -webkit-user-drag:none;
-
-  filter:drop-shadow(
-    0 15px 35px rgba(0,0,0,.35)
-  );
+  box-shadow:
+    0 15px 35px rgba(0,0,0,.5);
 
   animation:
     imageIn .8s cubic-bezier(.2,.8,.2,1);
@@ -393,15 +388,18 @@ body{
 
 <div class="container">
 
-  <!-- FULL IMAGE -->
+  <!-- EMBEDDED YOUTUBE VIDEO -->
 
   <div class="logo-area">
-    <img
-      class="logo"
-      src="./slide/b.png"
-      alt="Presentation"
-      draggable="false"
-    >
+    <iframe
+      class="video-frame"
+      src="https://www.youtube.com/embed/kIFl5SRvqnI"
+      title="Presentation Video"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      referrerpolicy="strict-origin-when-cross-origin"
+      allowfullscreen
+    ></iframe>
   </div>
 
 
