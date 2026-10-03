@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="bn"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#1d2433"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<title>Asian Parliamentary Debate — Istiack</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;font-family:"Hind Siliguri","Noto Sans Bengali",system-ui,sans-serif;background:#cfd2d8;color:#111}
+#app{display:flex;height:100%}
+#thumbs{width:210px;flex:none;background:#e9eaee;border-right:2px solid #b8bcc6;overflow-y:auto;padding:70px 12px 80px}
+.fs #thumbs{display:none}
+.th{margin-bottom:12px;cursor:pointer;display:flex;gap:6px}.th b{font-size:12px;color:#555;width:16px;text-align:right;padding-top:2px}
+.th .c{flex:1;border:3px solid transparent;border-radius:4px;background:#fff;overflow:hidden;box-shadow:0 1px 3px #0004}.th.on .c{border-color:#1a4fa0}.th canvas{width:100%;display:block}
+.th .sc{padding:8px 6px;font-size:12px;line-height:1.3;border-left:6px solid #1a4fa0}.th .sc.o{border-color:#d33}.th .sc.n{border-color:#f2a900}
+#stagewrap{flex:1;position:relative;display:flex;align-items:center;justify-content:center;padding:44px 28px 56px}
+#frame{position:relative;background:#fff;border:4px solid #1d2433;border-radius:6px;box-shadow:0 10px 40px #0005;overflow:hidden}
+#cv{width:100%;height:100%;display:block}
+#label{position:absolute;top:12px;left:0;right:0;text-align:center;font-size:14px;color:#333;font-weight:600;pointer-events:none}
+.fab{position:fixed;z-index:30;width:48px;height:48px;border-radius:50%;border:0;background:#1d2433;color:#fff;font-size:24px;cursor:pointer;box-shadow:0 3px 10px #0006;display:flex;align-items:center;justify-content:center}.fab:hover{background:#1a4fa0}.fab:disabled{opacity:.3;cursor:default}
+#bMenu{top:12px;left:12px}#bFs{top:12px;right:12px}#bPrev{bottom:12px;left:12px}#bNext{bottom:12px;right:12px}
+#back{position:fixed;inset:0;background:#0007;z-index:40;display:none}
+#drawer{position:fixed;top:0;bottom:0;left:0;width:380px;max-width:92vw;background:#fff;z-index:41;transform:translateX(-102%);transition:transform .22s;overflow-y:auto;box-shadow:4px 0 24px #0006}
+.open #drawer{transform:none}.open #back{display:block}
+#drawer h2{margin:0;padding:16px 18px;font-size:16px;background:#1d2433;color:#fff;position:sticky;top:0}
+#drawer h3{margin:0;padding:10px 18px;font-size:13px;background:#e9eaee;color:#1a4fa0;position:sticky;top:50px;letter-spacing:.5px}
+.it{padding:9px 18px 9px 14px;cursor:pointer;font-size:15px;display:flex;gap:10px;border-bottom:1px solid #eee}.it:hover{background:#eef3fb}.it.on{background:#1a4fa0;color:#fff}.it i{font-style:normal;width:28px;text-align:right;opacity:.6;font-size:12px;padding-top:3px}
+#loader{position:fixed;inset:0;background:#1d2433;color:#fff;z-index:99;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:20px}
+#lbar{width:min(420px,80vw);height:10px;background:#3a4560;border-radius:6px;overflow:hidden}#lbar i{display:block;height:100%;width:0;background:#f2a900}
+#lmsg{max-width:640px;font-size:15px;line-height:1.6;color:#ffd}code{background:#000;padding:2px 8px;border-radius:4px}
+/* SIM */
+#sim{position:absolute;inset:0;display:flex;flex-direction:column;background:#1e293b;color:#fff;font-size:inherit}
+#sim .hud{height:4.2em;background:#0f172a;border-bottom:.25em solid #334155;display:flex;align-items:center;justify-content:space-between;padding:0 1.6em}
+#sim .tm{text-align:center;background:#000;border:.15em solid #475569;border-radius:.4em;padding:.2em 1.4em}#sim .tm small{display:block;font-size:.8em;color:#94a3b8}#sim .tm span{font-size:2em;font-weight:700;font-family:monospace}
+#sim .room{flex:1;position:relative;background:linear-gradient(#1e293b,#334155);overflow:hidden}
+#sim .fl{position:absolute;left:0;right:0;bottom:0;height:45%;background:repeating-linear-gradient(90deg,#0000 0 3em,#fff1 3em 3.1em),repeating-linear-gradient(#0000 0 3em,#fff1 3em 3.1em)}
+#sim .bn{position:absolute;top:30%;width:26%;height:3.4em;border-bottom:.3em solid;border-radius:.3em;opacity:.55}#sim .bg{left:6%;background:#1e3a8a;border-color:#2563eb;transform:skewX(-10deg)}#sim .bo{right:6%;background:#7f1d1d;border-color:#dc2626;transform:skewX(10deg)}
+#sim .bl{position:absolute;top:22%;font-size:.8em;font-weight:700;letter-spacing:.1em;opacity:.6}
+#sim .pod{position:absolute;bottom:14%;left:50%;transform:translateX(-50%);width:7em;height:4.4em;background:#92400e;border-top:.5em solid #d97706;border-radius:.5em .5em 0 0;text-align:center;font-size:1.3em;padding-top:.6em}
+#sim .av{position:absolute;display:flex;flex-direction:column;align-items:center;transition:all 1s ease-in-out;z-index:5}
+#sim .av .ic{width:3em;height:3em;border-radius:50%;border:.2em solid #fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1em;box-shadow:0 .3em .6em #0008}
+#sim .av.g .ic{background:#2563eb}#sim .av.o .ic{background:#dc2626}#sim .av em{font-style:normal;font-size:.75em;background:#000a;border-radius:.3em;padding:0 .5em;margin-top:.3em}
+#sim .av.sp .ic{border-color:#fbbf24;animation:b 1s infinite alternate}@keyframes b{to{transform:translateY(-.5em);box-shadow:0 0 1.2em #fbbf24}}
+#sim .info{position:absolute;top:.8em;left:50%;transform:translateX(-50%);font-size:.85em;background:#000a;border-radius:.5em;padding:.3em 1em;z-index:6}
+#sim .dlg{background:#000d;border-top:.2em solid #f8fafc;padding:.7em 1.4em;min-height:8.4em}#sim .dlg h4{margin:0 0 .2em;font-size:1.1em}#sim .dlg p{margin:0;font-size:.98em;line-height:1.5}
+#sim .bar{height:.4em;background:#334155;border-radius:.3em;margin-top:.5em}#sim .bar i{display:block;height:100%;background:#3b82f6;width:0;border-radius:.3em}
+#sim .ctl{display:flex;gap:.6em;align-items:center;padding:.6em 1.2em;background:#1e293b}
+#sim button{font:inherit;font-size:.95em;color:#fff;border:0;border-bottom:.2em solid #0004;border-radius:.4em;padding:.4em 1.1em;cursor:pointer;background:#475569}#sim button:disabled{opacity:.45;cursor:not-allowed}
+#sim .go{background:#16a34a}#sim .pz{background:#ca8a04}#sim .sp{background:#7c3aed}#sim .poi{margin-left:auto;background:#dc2626;font-weight:700}#sim .poi.b{background:#2563eb}
+#sim .cnt{font-size:.85em;color:#cbd5e1}
+#sim .ov{position:absolute;inset:0;background:#7f1d1dcc;z-index:20;display:none;align-items:center;justify-content:center;flex-direction:column;text-align:center;gap:.8em;padding:2em}
+#sim .ov h2{margin:0;font-size:2em}#sim .ov p{max-width:34em;margin:0;line-height:1.5}#sim .ov .row{display:flex;gap:1em}
+
+html,body{-webkit-tap-highlight-color:transparent;touch-action:manipulation;overscroll-behavior:none}
+#app{height:100vh;height:100dvh}
+.fab{transition:opacity .3s;transition:opacity .3s,background .2s}
+#bMenu{top:max(12px,env(safe-area-inset-top));left:max(12px,env(safe-area-inset-left))}#bFs{top:max(12px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right))}
+#bPrev{bottom:max(12px,env(safe-area-inset-bottom));left:max(12px,env(safe-area-inset-left))}#bNext{bottom:max(12px,env(safe-area-inset-bottom));right:max(12px,env(safe-area-inset-right))}
+#hint{position:fixed;left:50%;bottom:80px;transform:translateX(-50%);background:#1d2433e6;color:#fff;padding:10px 16px;border-radius:12px;font-size:14px;z-index:35;max-width:86vw;text-align:center;display:none}
+#sim .ctl{flex-wrap:wrap}
+@media (pointer:coarse){.fab{width:56px;height:56px;font-size:28px}.it{padding:15px 18px}#drawer h3{top:50px}}
+@media (orientation:portrait){#app{flex-direction:column-reverse}#thumbs{width:auto;height:108px;display:flex;gap:8px;overflow-x:auto;overflow-y:hidden;padding:8px 78px;border-right:0;border-top:2px solid #b8bcc6}.th{flex:none;width:130px;margin:0}.th b{display:none}#stagewrap{padding:68px 8px 8px}#label{top:22px;font-size:13px}}
+@media (orientation:landscape) and (max-height:520px){#thumbs{width:150px;padding:64px 8px 70px}#stagewrap{padding:10px 14px}#label{display:none}.fab{width:46px;height:46px;font-size:22px}}
+body.fs #stagewrap{padding:8px!important}body.fs #label{display:none}body.fs #thumbs{display:none}
+body.pfs #app{position:fixed;inset:0;z-index:50}
+body.rot #app{position:fixed;left:100vw;top:0;width:100vh;height:100vw;transform:rotate(90deg);transform-origin:0 0;flex-direction:row;z-index:50}
+body.fs.idle .fab,body.fs.idle #hint{opacity:0;pointer-events:none}
+#pbar{position:absolute;top:0;left:0;height:3px;background:#f2a900;width:0;z-index:5;transition:width .25s}
+#sim[hidden]{display:none!important}#sim .pod{font-size:.8em;font-weight:700;letter-spacing:.1em;color:#fde68a;padding-top:1.3em}#label{padding:0 72px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}</style></head><body>
+<div id="app">
+ <div id="thumbs"></div><div id="pbar"></div>
+ <div id="stagewrap"><div id="label"></div>
+  <div id="frame"><canvas id="cv"></canvas>
+   <div id="sim" hidden>
+    <div class="hud"><b>AP Debate Simulator</b><div class="tm"><small id="sName">Ready</small><span id="sTime">00:00</span></div><div>স্টেজ <b id="sCnt">0/9</b></div></div>
+    <div class="room" id="room"><div class="fl"></div><div class="bl" style="left:8%;color:#60a5fa">GOVERNMENT</div><div class="bl" style="right:8%;color:#f87171">OPPOSITION</div><div class="bn bg"></div><div class="bn bo"></div><div class="pod">PODIUM</div><div class="info" id="sInfo">Protected time: প্রথম ও শেষ ১ মিনিটে POI নয়</div>
+     <div class="ov" id="sPoi"><h2>✋ POI RAISED!</h2><p id="sPoiTxt">বক্তা কি POI গ্রহণ করবেন?</p><div class="row"><button class="go" id="bAcc">Accept (টাইমার পজ)</button><button id="bDec">Decline</button></div></div>
+     <div class="ov" id="sPoiAns" style="background:#1e3a8acc"><h2>POI চলছে</h2><p>বক্তা উত্তর দেওয়া শেষ করলে বক্তৃতা আবার চালু করো।</p><button class="go" id="bRes">Resume Speech</button></div></div>
+    <div class="dlg"><h4 id="dName">স্বাগতম</h4><p id="dText">Start চাপো। এটি APD ফরম্যাটের স্বয়ংক্রিয় সিমুলেশন। বাম পাশের স্টেজ কার্ড থেকে যেকোনো স্টেজে যাও।</p><div class="bar"><i id="sBar"></i></div></div>
+    <div class="ctl"><button class="go" id="bStart">▶ Start</button><button class="sp" id="bSpeed">⏩ x1</button><button id="bSkip">⏭ Skip</button><button id="bSnd">🔔 On</button><span class="cnt" id="sCnts">POI: 0 গৃহীত • 0 প্রত্যাখ্যাত</span><button class="poi" id="bPoi" disabled>🔒 POI</button></div>
+   </div>
+  </div>
+ </div>
+
+<button class="fab" id="bMenu" title="Topics">☰</button><button class="fab" id="bFs" title="Fullscreen">⛶</button><button class="fab" id="bPrev" title="Previous">‹</button><button class="fab" id="bNext" title="Next">›</button>
+<div id="back"></div><div id="drawer"></div><div id="hint">📱 ⛶ চাপলে স্ক্রিন আড়াআড়ি (Landscape) হয়ে ফুলস্ক্রিন হবে। বাম-ডানে সোয়াইপ করে স্লাইড বদলাও।</div></div>
+<div id="loader"><h1 style="margin:0">Asian Parliamentary Debate</h1><div>সব স্লাইড লোড হচ্ছে… <b id="lpct">0%</b></div><div id="lbar"><i></i></div><div id="lmsg"></div></div>
+<script>
+var GROUPS=[{"t": "START", "items": [{"n": "Structure of Asian Parliamentary Debate", "sim": 1}]}, {"t": "00 — DEBATE LANGUAGE", "items": [{"n": "Grammar", "f": "00A_Grammar.pdf"}, {"n": "Debate Vocabulary", "f": "00B_Debate_Vocabulary.pdf"}, {"n": "Debate Expressions", "f": "00C_Debate_Expressions.pdf"}, {"n": "Logical Language", "f": "00D_Logical_Language.pdf"}]}, {"t": "01 — MOTION LITERACY", "items": [{"n": "Motion Basics", "f": "01A_Motion_Basics.pdf"}, {"n": "THW", "f": "01B_THW.pdf"}, {"n": "THBT", "f": "01C_THBT.pdf"}, {"n": "THS", "f": "01D_THS.pdf"}, {"n": "THR", "f": "01E_THR.pdf"}, {"n": "THP", "f": "01F_THP.pdf"}, {"n": "THO", "f": "01G_THO.pdf"}, {"n": "Motion Anatomy", "f": "01H_Motion_Anatomy.pdf"}]}, {"t": "02 — MOTION FAMILIES", "items": [{"n": "Actor Motions", "f": "02A_Actor_Motions.pdf"}, {"n": "Policy Motions", "f": "02B_Policy_Motions.pdf"}, {"n": "Regret Motions", "f": "02C_Regret_Motions.pdf"}, {"n": "Preference Motions", "f": "02D_Preference_Motions.pdf"}, {"n": "Value Motions", "f": "02E_Value_Motions.pdf"}, {"n": "Principle Motions", "f": "02F_Principle_Motions.pdf"}, {"n": "Historical Motions", "f": "02G_Historical_Motions.pdf"}, {"n": "Counterfactual Motions", "f": "02H_Counterfactual_Motions.pdf"}, {"n": "IR Motions", "f": "02I_IR_Motions.pdf"}, {"n": "Comparative Motions", "f": "02J_Comparative_Motions.pdf"}, {"n": "Abstract/Weird Motions", "f": "02K_Abstract_Weird_Motions.pdf"}]}, {"t": "03 — MOTION APPROACH", "items": [{"n": "Motion Breaking", "f": "03A_Motion_Breaking.pdf"}, {"n": "Definitions", "f": "03B_Definitions.pdf"}, {"n": "Characterisation", "f": "03C_Characterisation.pdf"}, {"n": "Status Quo", "f": "03D_Status_Quo.pdf"}, {"n": "Stakeholders", "f": "03E_Stakeholders.pdf"}, {"n": "Actor Analysis", "f": "03F_Actor_Analysis.pdf"}, {"n": "Power", "f": "03G_Power.pdf"}, {"n": "Incentives", "f": "03H_Incentives.pdf"}, {"n": "Counterfactual", "f": "03I_Counterfactual.pdf"}, {"n": "World Building", "f": "03J_World_Building.pdf"}]}, {"t": "04 — CASE BUILDING", "items": [{"n": "Team Line", "f": "04A_Team_Line.pdf"}, {"n": "Case Architecture", "f": "04B_Case_Architecture.pdf"}, {"n": "Argument Generation", "f": "04C_Argument_Generation.pdf"}, {"n": "Case Split", "f": "04D_Case_Split.pdf"}, {"n": "Extension", "f": "04E_Extension.pdf"}, {"n": "Countermodel", "f": "04F_Countermodel.pdf"}, {"n": "Prebuttal", "f": "04G_Prebuttal.pdf"}]}, {"t": "05 — ARGUMENTATION", "items": [{"n": "Claim", "f": "05A_Claim.pdf"}, {"n": "Mechanism", "f": "05B_Mechanism.pdf"}, {"n": "Impact", "f": "05C_Impact.pdf"}, {"n": "Comparison", "f": "05D_Comparison.pdf"}, {"n": "Principle Arguments", "f": "05E_Principle_Arguments.pdf"}, {"n": "Consequential Arguments", "f": "05F_Consequential_Arguments.pdf"}, {"n": "Incentive Arguments", "f": "05G_Incentive_Arguments.pdf"}, {"n": "Advanced Arguments", "f": "05H_Advanced_Arguments.pdf"}]}, {"t": "06 — REBUTTAL", "items": [{"n": "Premise Attack", "f": "06A_Premise_Attack.pdf"}, {"n": "Characterisation Attack", "f": "06B_Characterisation_Attack.pdf"}, {"n": "Mechanism Attack", "f": "06C_Mechanism_Attack.pdf"}, {"n": "Impact Attack", "f": "06D_Impact_Attack.pdf"}, {"n": "Comparative Attack", "f": "06E_Comparative_Attack.pdf"}, {"n": "Even-If", "f": "06F_Even_If.pdf"}, {"n": "Rebuttal Chains", "f": "06G_Rebuttal_Chains.pdf"}]}, {"t": "07 — POI", "items": [{"n": "POI Basics", "f": "07A_POI_Basics.pdf"}, {"n": "Asking POI", "f": "07B_Asking_POI.pdf"}, {"n": "Attacking POI", "f": "07C_Attacking_POI.pdf"}, {"n": "Defending POI", "f": "07D_Defending_POI.pdf"}, {"n": "Strategic POI", "f": "07E_Strategic_POI.pdf"}, {"n": "POI War", "f": "07F_POI_War.pdf"}]}, {"t": "08 — ADVANCED STRATEGY", "items": [{"n": "Framing", "f": "08A_Framing.pdf"}, {"n": "Meta-Framing", "f": "08B_Meta_Framing.pdf"}, {"n": "Knifing", "f": "08C_Knifing.pdf"}, {"n": "Concessions", "f": "08D_Concessions.pdf"}, {"n": "Collapse", "f": "08E_Collapse.pdf"}, {"n": "Prioritisation", "f": "08F_Prioritisation.pdf"}, {"n": "Strategic Time Management", "f": "08G_Strategic_Time_Management.pdf"}]}, {"t": "09 — SPEAKER ROLES", "items": [{"n": "PM", "f": "09A_PM.pdf"}, {"n": "LO", "f": "09B_LO.pdf"}, {"n": "DPM", "f": "09C_DPM.pdf"}, {"n": "DLO", "f": "09D_DLO.pdf"}, {"n": "GW", "f": "09E_GW.pdf"}, {"n": "OW", "f": "09F_OW.pdf"}, {"n": "Reply", "f": "09G_Reply.pdf"}]}, {"t": "10 — ECONOMICS", "items": [{"n": "Economics 101", "f": "10A_Economics_101.pdf"}, {"n": "Tax", "f": "10B_Tax.pdf"}, {"n": "Tariff", "f": "10C_Tariff.pdf"}, {"n": "Trade", "f": "10D_Trade.pdf"}, {"n": "Subsidy", "f": "10E_Subsidy.pdf"}, {"n": "Markets", "f": "10F_Markets.pdf"}, {"n": "Labour", "f": "10G_Labour.pdf"}, {"n": "Welfare", "f": "10H_Welfare.pdf"}, {"n": "Inflation", "f": "10I_Inflation.pdf"}, {"n": "Debt", "f": "10J_Debt.pdf"}, {"n": "Monetary/Fiscal Policy", "f": "10K_Monetary_Fiscal_Policy.pdf"}]}, {"t": "11 — POLITICS", "items": [{"n": "Political Systems", "f": "11A_Political_Systems.pdf"}, {"n": "Elections", "f": "11B_Elections.pdf"}, {"n": "Parties", "f": "11C_Parties.pdf"}, {"n": "Campaigns", "f": "11D_Campaigns.pdf"}, {"n": "Public Opinion", "f": "11E_Public_Opinion.pdf"}, {"n": "Institutions", "f": "11F_Institutions.pdf"}, {"n": "Political Incentives", "f": "11G_Political_Incentives.pdf"}]}, {"t": "12 — INTERNATIONAL RELATIONS", "items": [{"n": "State System", "f": "12A_State_System.pdf"}, {"n": "Sovereignty", "f": "12B_Sovereignty.pdf"}, {"n": "Diplomacy", "f": "12C_Diplomacy.pdf"}, {"n": "Alliances", "f": "12D_Alliances.pdf"}, {"n": "Sanctions", "f": "12E_Sanctions.pdf"}, {"n": "Trade", "f": "12F_Trade_Geopolitics.pdf"}, {"n": "War", "f": "12G_War.pdf"}, {"n": "Deterrence", "f": "12H_Deterrence.pdf"}, {"n": "Nuclear Politics", "f": "12I_Nuclear_Politics.pdf"}, {"n": "International Institutions", "f": "12J_International_Institutions.pdf"}]}, {"t": "13 — LAW", "items": [{"n": "Criminal Law", "f": "13A_Criminal_Law.pdf"}, {"n": "Civil Law", "f": "13B_Civil_Law.pdf"}, {"n": "Constitutional Law", "f": "13C_Constitutional_Law.pdf"}, {"n": "Human Rights", "f": "13D_Human_Rights.pdf"}, {"n": "Policing", "f": "13E_Policing.pdf"}, {"n": "Prison", "f": "13F_Prison.pdf"}, {"n": "Sentencing", "f": "13G_Sentencing.pdf"}, {"n": "Death Penalty", "f": "13H_Death_Penalty.pdf"}, {"n": "Due Process", "f": "13I_Due_Process.pdf"}]}, {"t": "14 — EDUCATION", "items": [{"n": "Education", "f": "14_Education.pdf"}]}, {"t": "15 — HEALTHCARE", "items": [{"n": "Healthcare", "f": "15_Healthcare.pdf"}]}, {"t": "16 — TECHNOLOGY", "items": [{"n": "Technology", "f": "16_Technology.pdf"}]}, {"t": "17 — SOCIAL POLICY", "items": [{"n": "Social Policy", "f": "17_Social_Policy.pdf"}]}, {"t": "18 — CULTURE", "items": [{"n": "Culture", "f": "18_Culture.pdf"}]}, {"t": "19 — GENDER", "items": [{"n": "Gender", "f": "19_Gender.pdf"}]}, {"t": "20 — IMMIGRATION", "items": [{"n": "Immigration", "f": "20_Immigration.pdf"}]}, {"t": "21 — ENVIRONMENT", "items": [{"n": "Environment", "f": "21_Environment.pdf"}]}, {"t": "22 — SCIENCE", "items": [{"n": "Science", "f": "22_Science.pdf"}]}, {"t": "23 — BIOETHICS", "items": [{"n": "Bioethics", "f": "23_Bioethics.pdf"}]}, {"t": "24 — MEDIA", "items": [{"n": "Media", "f": "24_Media.pdf"}]}, {"t": "25 — RELIGION & SECULARISM", "items": [{"n": "Religion & Secularism", "f": "25_Religion_Secularism.pdf"}]}, {"t": "26 — CRIME & SECURITY", "items": [{"n": "Crime & Security", "f": "26_Crime_Security.pdf"}]}, {"t": "27 — DEVELOPMENT", "items": [{"n": "Development", "f": "27_Development.pdf"}]}, {"t": "28 — HISTORY", "items": [{"n": "History", "f": "28_History.pdf"}]}, {"t": "29 — PHILOSOPHY", "items": [{"n": "Philosophy", "f": "29_Philosophy.pdf"}]}, {"t": "30 — PSYCHOLOGY & HUMAN BEHAVIOUR", "items": [{"n": "Psychology & Human Behaviour", "f": "30_Psychology_Human_Behaviour.pdf"}]}, {"t": "31 — ADJUDICATION", "items": [{"n": "Judging Philosophy", "f": "31A_Judging_Philosophy.pdf"}, {"n": "Clash", "f": "31B_Clash.pdf"}, {"n": "Comparative", "f": "31C_Comparative_Judging.pdf"}, {"n": "Speaker Evaluation", "f": "31D_Speaker_Evaluation.pdf"}, {"n": "Team Evaluation", "f": "31E_Team_Evaluation.pdf"}, {"n": "Ballot", "f": "31F_Ballot.pdf"}, {"n": "Feedback", "f": "31G_Feedback.pdf"}]}, {"t": "32 — FINAL BOSS", "items": [{"n": "Unknown Motions", "f": "32A_Unknown_Motions.pdf"}, {"n": "Cross Domain Motions", "f": "32B_Cross_Domain_Motions.pdf"}, {"n": "Multi Layer Motions", "f": "32C_Multi_Layer_Motions.pdf"}, {"n": "Full Debates", "f": "32D_Full_Debates.pdf"}, {"n": "Full Adjudication", "f": "32E_Full_Adjudication.pdf"}, {"n": "Post Debate Analysis", "f": "32F_Post_Debate_Analysis.pdf"}]}, {"t": "EXTRA — PRACTICE", "items": [{"n": "Motion Bank (50 Motions)", "f": "Motion_Bank_50.pdf"}]}];
+var FLAT=[];GROUPS.forEach(function(g){g.items.forEach(function(it){it.i=FLAT.length;FLAT.push(it)})});
+var $=function(s){return document.querySelector(s)};
+pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+var frame=$("#frame"),cv=$("#cv"),thumbs=$("#thumbs"),sim=$("#sim"),cur=null,page=1,total=1,token=0,cache={};
+/* ---------- drawer ---------- */
+(function(){var h="<h2>Topics — Asian Parliamentary Debate</h2>";GROUPS.forEach(function(g){h+="<h3>"+g.t+"</h3>";g.items.forEach(function(it){h+="<div class='it' data-i='"+it.i+"'><i>"+(it.i+1)+"</i><span>"+it.n+"</span></div>"})});$("#drawer").innerHTML=h;
+$("#drawer").addEventListener("click",function(e){var d=e.target.closest(".it");if(d){openItem(+d.dataset.i);document.body.classList.remove("open")}})})();
+$("#bMenu").onclick=function(){document.body.classList.toggle("open")};$("#back").onclick=function(){document.body.classList.remove("open")};
+
+/* ---------- preload ---------- */
+function preload(){var list=FLAT.filter(function(x){return x.f}),done=0,k=0,fails=0;
+ function upd(){var p=Math.round(done/list.length*100);$("#lpct").textContent=p+"%";$("#lbar i").style.width=p+"%"}
+ function work(){if(k>=list.length)return Promise.resolve();var it=list[k++];
+  return fetch("pdfs/"+it.f).then(function(r){if(!r.ok)throw new Error(r.status);return r.arrayBuffer()}).then(function(b){return pdfjsLib.getDocument({data:b}).promise}).then(function(d){it.doc=d}).catch(function(){fails++;it.err=1}).then(function(){done++;upd();return work()})}
+ var ws=[];for(var i=0;i<8;i++)ws.push(work());
+ return Promise.all(ws).then(function(){if(fails===list.length&&location.protocol==="file:"){$("#lmsg").innerHTML="ব্রাউজার file:// থেকে PDF পড়তে দেয় না। index.html ও pdfs ফোল্ডার যে ফোল্ডারে আছে সেখানে টার্মিনাল খুলে চালাও:<br><code>python3 -m http.server 8000</code><br>তারপর ব্রাউজারে <code>http://localhost:8000</code> খোলো।";return false}
+  if(fails)$("#lmsg").textContent=fails+"টি PDF পাওয়া যায়নি (pdfs ফোল্ডারে আছে কি না দেখো)।";return true})}
+/* ---------- layout ---------- */
+function layout(){var w=$("#stagewrap"),aw=w.clientWidth-56,ah=w.clientHeight-100;if(document.body.classList.contains("fs")){aw=w.clientWidth-20;ah=w.clientHeight-20}
+ var W=Math.max(300,Math.min(aw,ah*16/9));frame.style.width=W+"px";frame.style.height=W*9/16+"px";frame.style.fontSize=(W/64)+"px";cache={};if(cur&&cur.f)show(page)}
+window.addEventListener("resize",function(){clearTimeout(layout.t);layout.t=setTimeout(layout,150)});
+/* ---------- pdf render ---------- */
+function render(it,p,width){var key=it.f+"|"+p+"|"+width;if(cache[key])return Promise.resolve(cache[key]);
+ return it.doc.getPage(p).then(function(pg){var v=pg.getViewport({scale:1}),s=width/v.width,vp=pg.getViewport({scale:s}),c=document.createElement("canvas");c.width=Math.floor(vp.width);c.height=Math.floor(vp.height);
+  return pg.render({canvasContext:c.getContext("2d"),viewport:vp}).promise.then(function(){cache[key]=c;return c})})}
+function show(p){var it=cur,t=++token;var W=Math.min(2600,Math.round(frame.clientWidth*(window.devicePixelRatio||1)));
+ render(it,p,W).then(function(c){if(t!==token)return;cv.width=c.width;cv.height=c.height;cv.getContext("2d").drawImage(c,0,0);
+  setTimeout(function(){if(p<total)render(it,p+1,W);if(p>1)render(it,p-1,W)},30)})}
+function mark(){document.querySelectorAll(".th").forEach(function(e){e.classList.toggle("on",+e.dataset.p===page)});var a=thumbs.querySelector(".th.on");if(a)a.scrollIntoView({block:"nearest"});
+ $("#label").textContent=cur.n+"  •  "+page+" / "+total;$("#bPrev").disabled=page<=1;$("#bNext").disabled=page>=total;document.querySelectorAll(".it").forEach(function(e){e.classList.toggle("on",+e.dataset.i===cur.i)})}
+function goto(p){if(p<1||p>total)return;page=p;if(cur.sim){simLoad(p-1)}else show(p);mark()}
+function openItem(i){var it=FLAT[i];cur=it;page=1;thumbs.innerHTML="";
+ if(it.sim){cv.style.display="none";sim.hidden=false;total=ST.length;buildSimThumbs();simLoad(0);mark();return}
+ sim.hidden=true;cv.style.display="block";simPause();
+ if(!it.doc){$("#label").textContent=it.n+" — ফাইল পাওয়া যায়নি";cv.width=10;cv.height=10;return}
+ total=it.doc.numPages;var t=token+1;
+ for(var p=1;p<=total;p++){(function(p){var d=document.createElement("div");d.className="th";d.dataset.p=p;d.innerHTML="<b>"+p+"</b><div class='c'></div>";d.onclick=function(){goto(p)};thumbs.appendChild(d);
+  render(it,p,300).then(function(c){var k=document.createElement("canvas");k.width=c.width;k.height=c.height;k.getContext("2d").drawImage(c,0,0);d.querySelector(".c").appendChild(k)})})(p)}
+ show(1);mark()}
+$("#bPrev").onclick=function(){goto(page-1)};$("#bNext").onclick=function(){goto(page+1)};
+document.addEventListener("keydown",function(e){if(e.key==="ArrowRight"||e.key==="PageDown")goto(page+1);else if(e.key==="ArrowLeft"||e.key==="PageUp")goto(page-1);else if(e.key==="f"||e.key==="F")$("#bFs").onclick();else if(e.key==="Escape")document.body.classList.remove("open");else if(e.key===" "&&cur&&cur.sim){e.preventDefault();simToggle()}});
+/* ---------- simulation ---------- */
+var ST=[
+{n:"Prime Minister (PM)",s:"g",c:"pm",d:420,t:"main",x:"মোশন ব্যাখ্যা, সংজ্ঞা, মডেল ও টিম লাইন দাও। প্রথম যুক্তি উপস্থাপন করো। মাননীয় স্পিকার, আমরা এই হাউসে প্রস্তাব করছি যে..."},
+{n:"Strategic Time",s:"n",c:null,d:60,t:"pause",x:"১ মিনিটের কৌশলগত বিরতি। দলগুলো নিজেদের মধ্যে আলোচনা গুছিয়ে নিচ্ছে।"},
+{n:"Leader of Opposition (LO)",s:"o",c:"lo",d:420,t:"main",x:"সরকারের ফ্রেম ও মডেল চ্যালেঞ্জ করো, PM-এর যুক্তি খণ্ডন করো, বিরোধীর জগৎ ও যুক্তি দাও।"},
+{n:"Deputy Prime Minister (DPM)",s:"g",c:"dpm",d:420,t:"main",x:"LO-র খণ্ডন করো, PM-এর কেস রক্ষা ও গভীর করো এবং পেছনের ভাগের ভিত্তি তৈরি করো।"},
+{n:"Deputy Leader of Opposition (DLO)",s:"o",c:"dlo",d:420,t:"main",x:"সরকারের কেস ভাঙো, বিরোধীর কেস পুনর্গঠন ও বিশ্লেষণ গভীর করো।"},
+{n:"Government Whip (GW)",s:"g",c:"gw",d:420,t:"main",x:"ডিবেটের সারাংশ, প্রধান clash ও তুলনা দাও। কেন সরকার জিতছে তা দেখাও (নতুন বিষয় নয়, টুর্নামেন্টের নিয়ম দেখো)।"},
+{n:"Opposition Whip (OW)",s:"o",c:"ow",d:420,t:"main",x:"ডিবেটের সারাংশ, প্রধান clash ও তুলনা দাও। কেন বিরোধী জিতছে তা দেখাও (নতুন বিষয় নয়, টুর্নামেন্টের নিয়ম দেখো)।"},
+{n:"Opposition Reply",s:"o",c:"lo",d:240,t:"reply",x:"রিপ্লাই: ডিবেটের গল্প, সবচেয়ে বড় clash ও তুলনা। নতুন যুক্তি নয়, POI নয়। (Reply-এর নিয়ম টুর্নামেন্টভেদে আলাদা)"},
+{n:"Government Reply",s:"g",c:"pm",d:240,t:"reply",x:"রিপ্লাই: ডিবেটের গল্প, সবচেয়ে বড় clash ও তুলনা। নতুন যুক্তি নয়, POI নয়। (Reply-এর নিয়ম টুর্নামেন্টভেদে আলাদা)"}];
+var AV={pm:["PM","g",{left:"9%"}],dpm:["DPM","g",{left:"17%"}],gw:["GW","g",{left:"25%"}],lo:["LO","o",{right:"9%"}],dlo:["DLO","o",{right:"17%"}],ow:["OW","o",{right:"25%"}]};
+var sI=-1,sT=0,sM=0,sPlay=false,sLoop=null,sSpd=1,sAcc=0,sDec=0,sSnd=true,actx=null;
+Object.keys(AV).forEach(function(k){var a=AV[k],d=document.createElement("div");d.className="av "+a[1];d.id="av-"+k;d.style.top="26%";for(var p in a[2])d.style[p]=a[2][p];d.innerHTML="<div class='ic'>"+a[0]+"</div><em>"+a[0]+"</em>";$("#room").appendChild(d)});
+function fmt(s){return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")}
+function buildSimThumbs(){thumbs.innerHTML="";ST.forEach(function(s,i){var d=document.createElement("div");d.className="th";d.dataset.p=i+1;d.innerHTML="<b>"+(i+1)+"</b><div class='c'><div class='sc "+s.s+"'><b style='width:auto;text-align:left;color:#111;font-size:12px'>"+s.n+"</b><br>"+fmt(s.d)+"</div></div>";d.onclick=function(){goto(i+1)};thumbs.appendChild(d)})}
+function bell(n){if(!sSnd)return;try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();for(var i=0;i<n;i++){var o=actx.createOscillator(),g=actx.createGain();o.frequency.value=880;o.connect(g);g.connect(actx.destination);var t=actx.currentTime+i*.28;g.gain.setValueAtTime(.25,t);g.gain.exponentialRampToValueAtTime(.001,t+.22);o.start(t);o.stop(t+.25)}}catch(e){}}
+function simLoad(i){simPause();sI=i;var s=ST[i];sM=sT=s.d;$("#sName").textContent=s.n;$("#sCnt").textContent=(i+1)+"/"+ST.length;$("#dName").textContent=s.n;$("#dName").style.color=s.s==="g"?"#60a5fa":s.s==="o"?"#f87171":"#fbbf24";$("#dText").textContent=s.x;
+ Object.keys(AV).forEach(function(k){var e=$("#av-"+k),a=AV[k];e.className="av "+a[1];e.style.top="26%";e.style.bottom="auto";e.style.transform="none";e.style.left=e.style.right="";for(var p in a[2])e.style[p]=a[2][p]});
+ if(s.c){var e=$("#av-"+s.c);e.style.left="50%";e.style.right="auto";e.style.top="auto";e.style.bottom="calc(14% + 3.4em)";e.style.transform="translateX(-50%) scale(1.4)";setTimeout(function(){if(sI===i)e.classList.add("sp")},900)}
+ $("#sInfo").textContent=s.t==="main"?"POI: প্রথম ও শেষ ১ মিনিট সুরক্ষিত":s.t==="reply"?"Reply speech — POI নেই":"কৌশলগত বিরতি";
+ $("#bStart").disabled=false;$("#bStart").className="go";$("#bStart").textContent="▶ Start";simDraw()}
+function simDraw(){$("#sTime").textContent=fmt(sT);$("#sBar").style.width=((sM-sT)/sM*100)+"%";var s=ST[sI],el=sM-sT,b=$("#bPoi");
+ if(s.t!=="main"){b.disabled=true;b.textContent="🚫 No POI";b.className="poi";return}
+ if(!sPlay){b.disabled=true;b.textContent="🔒 POI";b.className="poi";return}
+ if(el<60||sT<=60){b.disabled=true;b.textContent="🔒 Protected";b.className="poi"}else{b.disabled=false;b.textContent="✋ Raise POI!";b.className="poi"+(s.s==="g"?"":" b")}}
+function simTick(){if(sT>0){sT--;var el=sM-sT,s=ST[sI];if(s.t==="main"&&(el===60||sT===60))bell(1);if(sT===0)bell(s.t==="pause"?1:2);simDraw()}else{simPause();if(sI<ST.length-1){setTimeout(function(){if(!sPlay&&cur&&cur.sim)goto(sI+2)},1500)}else{$("#dName").textContent="Game Over";$("#dText").textContent="বিতর্ক শেষ! এবার বিচারকের রায় ও ফিডব্যাকের সময়।"}}}
+function simStart(){if(sPlay||sT<=0)return;sPlay=true;$("#bStart").className="pz";$("#bStart").textContent="⏸ Pause";sLoop=setInterval(simTick,1000/sSpd);simDraw()}
+function simPause(){sPlay=false;clearInterval(sLoop);if(sI>=0){$("#bStart").className="go";$("#bStart").textContent="▶ Start";simDraw()}}
+function simToggle(){sPlay?simPause():simStart()}
+$("#bStart").onclick=simToggle;$("#bSkip").onclick=function(){if(sI<ST.length-1)goto(sI+2)};
+$("#bSpeed").onclick=function(){sSpd=sSpd===1?10:1;this.textContent="⏩ x"+sSpd;if(sPlay){simPause();simStart()}};
+$("#bSnd").onclick=function(){sSnd=!sSnd;this.textContent=sSnd?"🔔 On":"🔕 Off"};
+$("#bPoi").onclick=function(){simPause();$("#sPoi").style.display="flex";$("#sPoiTxt").textContent=(ST[sI].s==="g"?"বিরোধী":"সরকারি")+" দল POI চাইছে। "+ST[sI].n+" কি গ্রহণ করবেন?"};
+$("#bAcc").onclick=function(){sAcc++;$("#sPoi").style.display="none";$("#sPoiAns").style.display="flex";cnts()};
+$("#bDec").onclick=function(){sDec++;$("#sPoi").style.display="none";cnts();simStart()};
+$("#bRes").onclick=function(){$("#sPoiAns").style.display="none";simStart()};
+function cnts(){$("#sCnts").textContent="POI: "+sAcc+" গৃহীত • "+sDec+" প্রত্যাখ্যাত"}
+
+/* ---------- v2: responsive, fullscreen, touch ---------- */
+function layout(){var w=$("#stagewrap"),cs=getComputedStyle(w),fs=document.body.classList.contains("fs");
+ var aw=w.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight),ah=w.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom);
+ var port=!fs&&w.clientHeight>w.clientWidth*0.9&&window.matchMedia("(orientation:portrait)").matches,sp=port&&cur&&cur.sim;
+ var W=Math.max(240,Math.min(aw,ah*16/9)),H=W*9/16;if(sp){W=Math.max(240,aw);H=Math.max(H,Math.min(ah,W*1.6))}
+ frame.style.width=W+"px";frame.style.height=H+"px";frame.style.fontSize=(sp?Math.max(W/36,9):W/64)+"px";cache={};if(cur&&cur.f)show(page)}
+var inFs=function(){return document.body.classList.contains("fs")};
+function checkRot(){document.body.classList.toggle("rot",inFs()&&window.innerHeight>window.innerWidth&&!document.fullscreenElement&&!document.webkitFullscreenElement||inFs()&&window.innerHeight>window.innerWidth&&window.__lockFail);layout()}
+function lockLand(){if(screen.orientation&&screen.orientation.lock){return screen.orientation.lock("landscape").catch(function(){window.__lockFail=1})}window.__lockFail=1;return Promise.resolve()}
+function wake(){try{if(navigator.wakeLock)navigator.wakeLock.request("screen").then(function(l){window.__wl=l}).catch(function(){})}catch(e){}}
+function enterFs(){var el=document.documentElement,rq=el.requestFullscreen||el.webkitRequestFullscreen;window.__lockFail=0;document.body.classList.add("fs");
+ var done=function(){lockLand().then(function(){setTimeout(checkRot,250)});wake()};
+ if(rq){try{var p=rq.call(el);if(p&&p.then)p.then(done).catch(function(){document.body.classList.add("pfs");checkRot();wake()});else done()}catch(e){document.body.classList.add("pfs");checkRot();wake()}}
+ else{document.body.classList.add("pfs");window.__lockFail=1;checkRot();wake()}
+ resetIdle()}
+function exitFs(){document.body.classList.remove("fs","pfs","rot","idle");try{if(screen.orientation&&screen.orientation.unlock)screen.orientation.unlock()}catch(e){}
+ try{if(document.fullscreenElement)document.exitFullscreen();else if(document.webkitFullscreenElement)document.webkitExitFullscreen()}catch(e){}
+ try{if(window.__wl)window.__wl.release()}catch(e){}setTimeout(layout,150)}
+$("#bFs").onclick=function(){inFs()?exitFs():enterFs()};
+function fsch(){if(!document.fullscreenElement&&!document.webkitFullscreenElement&&inFs()&&!document.body.classList.contains("pfs"))exitFs();else checkRot()}
+document.addEventListener("fullscreenchange",fsch);document.addEventListener("webkitfullscreenchange",fsch);
+window.addEventListener("orientationchange",function(){setTimeout(function(){inFs()?checkRot():layout()},300)});
+window.addEventListener("resize",function(){if(inFs())setTimeout(checkRot,100)});
+/* idle auto-hide of buttons in fullscreen */
+var idleT;function resetIdle(){document.body.classList.remove("idle");clearTimeout(idleT);if(inFs())idleT=setTimeout(function(){document.body.classList.add("idle")},3000)}
+["pointermove","pointerdown","touchstart","keydown"].forEach(function(e){document.addEventListener(e,resetIdle,{passive:true})});
+/* swipe */
+(function(){var sx,sy,t0;frame.addEventListener("touchstart",function(e){if(cur&&cur.sim)return;var t=e.changedTouches[0];sx=t.clientX;sy=t.clientY;t0=Date.now()},{passive:true});
+ frame.addEventListener("touchend",function(e){if(sx==null||cur&&cur.sim)return;var t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;sx=null;if(document.body.classList.contains("rot")){var q=dx;dx=dy;dy=-q}
+  if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)*1.3&&Date.now()-t0<900)goto(dx<0?page+1:page-1)},{passive:true})})();
+/* progress bar + openItem wrapper */
+var _mark=mark;mark=function(){_mark();$("#pbar").style.width=(total>1?(page-1)/(total-1)*100:100)+"%"};
+var _oi=openItem;openItem=function(i){_oi(i);layout();mark()};
+/* ---------- start ---------- */
+layout();preload().then(function(ok){if(ok){$("#loader").style.display="none";openItem(0);if(window.matchMedia("(orientation:portrait)").matches){var hn=$("#hint");hn.style.display="block";setTimeout(function(){hn.style.display="none"},6000)}}});
+</script></body></html>
